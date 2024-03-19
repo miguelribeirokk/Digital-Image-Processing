@@ -5,7 +5,8 @@ import numpy as np
 last_positions = []
 
 # Número de frames anteriores a serem considerados para rastrear o movimento do objeto
-NUM_LAST_POSITIONS = 100
+NUM_LAST_POSITIONS = 1000
+
 
 # Função para rastrear o objeto azul na imagem
 def track_blue_object(frame):
@@ -18,12 +19,13 @@ def track_blue_object(frame):
     lower_blue = np.array([100, 150, 0])
     upper_blue = np.array([140, 255, 255])
 
-    # Criando uma máscara para isolar a cor azul na imagem
+    # Criando uma máscara para isolar o azul na imagem
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
 
     # Aplicando operações morfológicas para melhorar a máscara
-    mask = cv2.erode(mask, None, iterations=2)
-    mask = cv2.dilate(mask, None, iterations=2)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))  # Elemento estruturante retangular
+    mask = cv2.erode(mask, kernel, iterations=2)  # Erosão
+    mask = cv2.dilate(mask, kernel, iterations=2)  # Dilatação
 
     # Aplicando a máscara ao frame original
     masked_frame = cv2.bitwise_and(frame, frame, mask=mask)
@@ -37,10 +39,10 @@ def track_blue_object(frame):
         max_contour = max(contours, key=cv2.contourArea)
 
         # Calculando o centro do contorno
-        M = cv2.moments(max_contour)
-        if M["m00"] != 0:
-            cx = int(M["m10"] / M["m00"])
-            cy = int(M["m01"] / M["m00"])
+        m = cv2.moments(max_contour)
+        if m["m00"] != 0:
+            cx = int(m["m10"] / m["m00"])
+            cy = int(m["m01"] / m["m00"])
         else:
             cx, cy = 0, 0
 
@@ -59,6 +61,7 @@ def track_blue_object(frame):
             cv2.line(masked_frame, last_positions[i - 1], last_positions[i], (0, 255, 0), 2)
 
     return masked_frame
+
 
 # Função principal
 def main():
@@ -87,6 +90,7 @@ def main():
     # Liberando os recursos
     cap.release()
     cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     main()
