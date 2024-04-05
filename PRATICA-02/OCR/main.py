@@ -3,41 +3,45 @@ import numpy as np
 import pytesseract
 import re
 
+
 # Função para ler a placa do carro com OCR
-def ler_placa_sem_processamento(imagem, nome_arquivo):
-    result = pytesseract.image_to_string(imagem, config='--psm 6')
-    cv2.imwrite(f"{nome_arquivo}_ocr.png", imagem)
+def ler_placa_sem_processamento(img, arquivo):
+    result = pytesseract.image_to_string(img, config='--psm 6')
+    cv2.imwrite(f"{arquivo}_ocr.png", img)
     return result.strip()
 
+
 # Função para aplicar limiarização de Otsu
-def aplicar_limiarizacao_otsu(imagem, nome_arquivo):
+def aplicar_limiarizacao_otsu(img, arquivo):
     # Converte para escala de cinza
-    gray = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Aplica um filtro de mediana para remover ruídos
     gray = cv2.medianBlur(gray, 5)
 
     # Aplica a limiarização de Otsu
     _, th_otsu = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    cv2.imwrite(f"{nome_arquivo}_limiarizacao.png", th_otsu)
+    cv2.imwrite(f"{arquivo}_limiarizacao.png", th_otsu)
     return th_otsu
 
+
 # Função para segmentar a placa do carro
-def segmentar_placa(imagem, nome_arquivo):
+def segmentar_placa(img, arquivo):
     # Encontrar contornos
-    contours, _ = cv2.findContours(imagem, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # Encontrar o maior contorno (placa do carro)
     max_contour = max(contours, key=cv2.contourArea)
 
     # Criar uma máscara para a placa do carro
-    mask = np.zeros_like(imagem)
-    cv2.drawContours(mask, [max_contour], -1, (255), thickness=cv2.FILLED)
+    mask = np.zeros_like(img)
+    cv2.drawContours(mask, [max_contour], -1, 255, thickness=cv2.FILLED)
 
     # Aplicar a máscara na imagem original
-    segmented_plate = cv2.bitwise_and(imagem, imagem, mask=mask)
-    cv2.imwrite(f"{nome_arquivo}_segmentada.png", segmented_plate)
+    segmented_plate = cv2.bitwise_and(img, img, mask=mask)
+    cv2.imwrite(f"{arquivo}_segmentada.png", segmented_plate)
     return segmented_plate
+
 
 # Função para validar a placa do carro
 def validar_placa(placa):
@@ -49,6 +53,7 @@ def validar_placa(placa):
         return True
     else:
         return False
+
 
 # Leitura da imagem
 imagem = cv2.imread('placas.png')

@@ -46,7 +46,7 @@ def process_image(imagem, media_b, media_g, media_r, tol, tamanho_janela):
 
 
 # Carrega a imagem
-img = cv2.imread("imagens/halteres.jpg")
+img = cv2.imread("../../PRATICA-03/halteres.jpg")
 print("Imagem carregada")
 
 # Cria uma janela para exibir a imagem
