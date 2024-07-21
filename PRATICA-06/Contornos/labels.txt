@@ -1,0 +1,15 @@
+0 acer
+1 aerosmith
+2 airbnb
+3 air-jordan
+4 android
+5 apple
+6 batman
+7 bentley
+8 boeing
+9 boston-celtics
+10 chevrolet
+11 linux
+12 los-angeles-lakers
+13 rolling-stones
+14 skype
