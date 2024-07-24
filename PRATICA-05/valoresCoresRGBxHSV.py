@@ -23,6 +23,7 @@ def mouse_callback(event, x, y, flags, param):
 
 # Carrega a imagem do disco
 img = cv2.imread('images/barras.png')
+img = cv2.imread("images/cuboIndoor.png")
 
 
 # Cria uma janela para exibir a imagem
