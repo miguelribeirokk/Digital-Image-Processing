@@ -79,7 +79,7 @@ def draw_intersections(img, intersections):
 
 
 # Carregar a imagem da quadra
-img0 = cv.imread('quadra1.png', cv.IMREAD_GRAYSCALE)
+img0 = cv.imread('quadratenis2.png', cv.IMREAD_GRAYSCALE)
 
 # Verificar se a imagem foi carregada
 if img0 is None:

@@ -20,6 +20,10 @@ def preProcess(img):
     imgPre = cv2.erode(imgPre, kernel, iterations=1)  # Erosão
     return imgPre
 
+#reconhece imagem de rosto do imput img
+def reconhecer_rosto(img):
+    
+
 
 def recortar_imagem(img):
     """
